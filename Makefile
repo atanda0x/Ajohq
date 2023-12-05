@@ -5,22 +5,22 @@ mysql:
 	docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=ethereumsolana -d mysql
 
 createdb:
-	docker exec -it postgres16 createdb --username=root --owner=root goBank
+	docker exec -it postgres16 createdb --username=root --owner=root Ajohq
 
 dropdb:
-	docker exec -it postgres16 dropdb -U root goBank
+	docker exec -it postgres16 dropdb -U root Ajohq
 
 migrateup:
-	migrate -path db/migration  -database "postgresql://root:ethereumsolana@localhost:5432/goBank?sslmode=disable" -verbose up
+	migrate -path db/migration  -database "postgresql://root:ethereumsolana@localhost:5432/Ajohq?sslmode=disable" -verbose up
 
 migrateup1:
-	migrate -path db/migration  -database "postgresql://root:ethereumsolana@localhost:5432/goBank?sslmode=disable" -verbose up 1
+	migrate -path db/migration  -database "postgresql://root:ethereumsolana@localhost:5432/Ajohq?sslmode=disable" -verbose up 1
 
 migratedown:
-	migrate -path db/migration -database "postgresql://root:ethereumsolana@localhost:5432/goBank?sslmode=disable" -verbose down
+	migrate -path db/migration -database "postgresql://root:ethereumsolana@localhost:5432/Ajohq?sslmode=disable" -verbose down
 
 migratedown1:
-	migrate -path db/migration -database "postgresql://root:ethereumsolana@localhost:5432/goBank?sslmode=disable" -verbose down 1
+	migrate -path db/migration -database "postgresql://root:ethereumsolana@localhost:5432/Ajohq?sslmode=disable" -verbose down 1
 
 sqlc: 
 	docker run --rm -v "${CURDIR}:/src" -w /src kjconroy/sqlc generate
