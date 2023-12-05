@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	db "github.com/atanda0x/goBank/db/sqlc"
+	db "github.com/atanda0x/Ajohq/db/sqlc"
 	"github.com/gin-gonic/gin"
 )
 

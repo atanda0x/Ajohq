@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	db "github.com/atanda0x/goBank/db/sqlc"
+	db "github.com/atanda0x/Ajohq/db/sqlc"
 	"github.com/stretchr/testify/require"
 )
 
