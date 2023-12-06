@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// Different types of error returned by the verifyToken func
 var (
 	ErrExpiredToken = errors.New("token has expired")
 	ErrInvalidToken = errors.New("token is invalid")
