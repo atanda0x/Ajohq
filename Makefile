@@ -1,14 +1,14 @@
 postgres:
-	docker run --name postgres16 -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=ethereumsolana -d postgres:16-alpine
+	docker run --name Ajo -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=ethereumsolana -d postgres:16-alpine
 
 mysql:
 	docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=ethereumsolana -d mysql
 
 createdb:
-	docker exec -it postgres16 createdb --username=root --owner=root Ajohq
+	docker exec -it Ajo createdb --username=root --owner=root Ajohq
 
 dropdb:
-	docker exec -it postgres16 dropdb -U root Ajohq
+	docker exec -it Ajo dropdb -U root Ajohq
 
 migrateup:
 	migrate -path db/migration  -database "postgresql://root:ethereumsolana@localhost:5432/Ajohq?sslmode=disable" -verbose up
