@@ -20,6 +20,7 @@ type Payload struct {
 	ExpiredAt time.Time `json:"expired_at"`
 }
 
+// NewPayload create a new token payload with a specific username and duration
 func NewPayLoad(username string, duration time.Duration) (*Payload, error) {
 	tokenID, err := uuid.NewRandom()
 	if err != nil {
