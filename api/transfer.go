@@ -4,10 +4,10 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"go/token"
 	"net/http"
 
 	db "github.com/atanda0x/Ajohq/db/sqlc"
+	"github.com/atanda0x/Ajohq/token"
 	"github.com/gin-gonic/gin"
 )
 
@@ -37,11 +37,11 @@ func (server *Server) createTransfer(ctx *gin.Context) {
 		return
 	}
 
-
-	if _, valid = server.validAccount(ctx, req.ToAccountID, req.Currency) {
+	_, valid = server.validAccount(ctx, req.ToAccountID, req.Currency)
+	if !valid {
 		return
 	}
-	
+
 	arg := db.TransferTxParams{
 		FromAccountID: req.FromAccountID,
 		ToAccountID:   req.ToAccountID,
@@ -74,5 +74,6 @@ func (server *Server) validAccount(ctx *gin.Context, accountID int64, currency s
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return account, false
 	}
+
 	return account, true
 }
