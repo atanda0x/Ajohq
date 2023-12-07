@@ -27,9 +27,9 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 	}
 
 	server := &Server{
+		config:     config,
 		store:      store,
 		tokenMaker: tokenMaker,
-		config:     config,
 	}
 	router := gin.Default()
 
@@ -37,6 +37,7 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 		v.RegisterValidation("currency", validCurrency)
 	}
 
+	// Middleware router
 	authRoutes := router.Group("/").Use(authMiddleware(server.tokenMaker))
 
 	// Accounts router
