@@ -3,7 +3,7 @@
 //   sqlc v1.26.0
 // source: account.sql
 
-package sqlc
+package db
 
 import (
 	"context"
@@ -21,14 +21,14 @@ RETURNING id, owner, balance, currency, created_at
 `
 
 type CreateAccountParams struct {
-	Owner    string
-	Balance  int64
-	Currency string
+	Owner    string `json:"owner"`
+	Balance  int64  `json:"balance"`
+	Currency string `json:"currency"`
 }
 
-func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error) {
-	row := q.db.QueryRow(ctx, createAccount, arg.Owner, arg.Balance, arg.Currency)
-	var i Account
+func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (Accounts, error) {
+	row := q.db.QueryRowContext(ctx, createAccount, arg.Owner, arg.Balance, arg.Currency)
+	var i Accounts
 	err := row.Scan(
 		&i.ID,
 		&i.Owner,
