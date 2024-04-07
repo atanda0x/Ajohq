@@ -62,7 +62,7 @@ func TestEntryList(t *testing.T) {
 
 	entries, err := testQueries.ListEntries(context.Background(), arg)
 	require.NoError(t, err)
-	require.NotEmpty(t, entries)
+	require.Len(t, entries, 5)
 
 	for _, entry := range entries {
 		require.NotEmpty(t, entry)
