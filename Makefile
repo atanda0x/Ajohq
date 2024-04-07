@@ -18,4 +18,8 @@ migrateup:
 
 migratedown:
 	migrate -path db/migration -database "postgresql://root:ethereum@localhost:5432/fintechAPI?sslmode=disable" -verbose down
-.PHONY: postgres createdb dropdb startdoc stopdoc
+
+sqlc:
+	sqlc generate
+
+.PHONY: postgres createdb dropdb startdoc stopdoc sqlc
