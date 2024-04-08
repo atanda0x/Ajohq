@@ -93,5 +93,5 @@ func (s Store) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTx
 		return nil
 	})
 
-	return result, nil
+	return result, err
 }
