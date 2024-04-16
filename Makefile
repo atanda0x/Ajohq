@@ -28,4 +28,7 @@ test:
 server:
 	go run main.go
 
-.PHONY: postgres createdb dropdb startdoc stopdoc sqlc test server
+mock: 
+	mockgen -package mockdb -destination db/mock/store.go github.com/atanda0x/FintechConnect/db/sqlc Store
+
+.PHONY: postgres createdb dropdb startdoc stopdoc sqlc test server mock
