@@ -176,6 +176,56 @@ func TestGetAccount(t *testing.T) {
 	}
 }
 
+func TestListAccount(t *testing.T) {
+    accounts := []db.Account{
+        {ID: 1, Name: "Alice", Balance: 100},
+        {ID: 2, Name: "Bob", Balance: 200},
+    }
+
+    testCases := []struct {
+        name          string
+        pageID        int
+        pageSize      int
+        buildStubs    func(store *mockdb.MockStore)
+        checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
+    }{
+        {
+            name:     "OK",
+            pageID:   1,
+            pageSize: 10,
+            buildStubs: func(store *mockdb.MockStore) {
+                store.EXPECT().ListAccounts(gomock.Any(), gomock.Any()).Times(1).Return(accounts, nil)
+            },
+            checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+                require.Equal(t, http.StatusOK, recorder.Code)
+                requireBodyMatchAccounts(t, recorder.Body, accounts)
+            },
+        },
+    }
+
+    for _, tc := range testCases {
+        t.Run(tc.name, func(t *testing.T) {
+            ctrl := gomock.NewController(t)
+            defer ctrl.Finish()
+
+            // build stubs
+            store := mockdb.NewMockStore(ctrl)
+            tc.buildStubs(store)
+
+            // start test server and send request
+            server := NewServer(store)
+            recorder := httptest.NewRecorder()
+
+            url := fmt.Sprintf("/accounts?page_id=%d&page_size=%d", tc.pageID, tc.pageSize)
+            request, err := http.NewRequest(http.MethodGet, url, nil)
+            require.NoError(t, err)
+
+            server.router.ServeHTTP(recorder, request)
+            tc.checkResponse(t, recorder)
+        })
+    }
+}
+
 
 
 
@@ -197,4 +247,18 @@ func requireBodyMatchAccount(t *testing.T, body *bytes.Buffer, account db.Accoun
 	err = json.Unmarshal(data, &getAccount)
 	require.NoError(t, err)
 	require.Equal(t, account, getAccount)
+}
+
+
+func requireBodyMatchAccounts(t *testing.T, body *bytes.Buffer, expected []db.Account) {
+    var accounts []db.Account
+    err := json.NewDecoder(body).Decode(&accounts)
+    require.NoError(t, err)
+
+    require.Equal(t, len(expected), len(accounts))
+    for i := range expected {
+        require.Equal(t, expected[i].ID, accounts[i].ID)
+        require.Equal(t, expected[i].Name, accounts[i].Name)
+        require.Equal(t, expected[i].Balance, accounts[i].Balance)
+    }
 }
