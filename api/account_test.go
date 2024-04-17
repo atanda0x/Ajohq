@@ -95,6 +95,91 @@ func TestGetAccount(t *testing.T) {
 
 }
 
+
+func TestGetAccount(t *testing.T) {
+	account := randomAccount()
+
+	testCases := []struct {
+		name          string
+		accountID     int64
+		expectedCode  int
+		expectedBody  string
+		buildStubs    func(store *mockdb.MockStore)
+	}{
+		{
+			name:         "OK",
+			accountID:    account.ID,
+			expectedCode: http.StatusOK,
+			expectedBody: accountJSON(account),
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().GetAccount(gomock.Any(), gomock.Eq(account.ID)).Times(1).Return(account, nil)
+			},
+		},
+		{
+			name:         "NotFound",
+			accountID:    account.ID,
+			expectedCode: http.StatusNotFound,
+			expectedBody: "",
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().GetAccount(gomock.Any(), gomock.Eq(account.ID)).Times(1).Return(db.Account{}, sql.ErrNoRows)
+			},
+		},
+		{
+			name:         "InternalError",
+			accountID:    account.ID,
+			expectedCode: http.StatusInternalServerError,
+			expectedBody: "",
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().GetAccount(gomock.Any(), gomock.Eq(account.ID)).Times(1).Return(db.Account{}, sql.ErrConnDone)
+			},
+		},
+		{
+			name:         "InvalidID",
+			accountID:    0,
+			expectedCode: http.StatusBadRequest,
+			expectedBody: "",
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().GetAccount(gomock.Any(), gomock.Any()).Times(0)
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			// build stubs
+			store := mockdb.NewMockStore(ctrl)
+			tc.buildStubs(store)
+
+			// start test server and send request
+			server := NewServer(store)
+			recorder := httptest.NewRecorder()
+
+			url := fmt.Sprintf("/accounts/%d", tc.accountID)
+			request, err := http.NewRequest(http.MethodGet, url, nil)
+			require.NoError(t, err)
+
+			server.router.ServeHTTP(recorder, request)
+
+			// Check response status code
+			require.Equal(t, tc.expectedCode, recorder.Code)
+
+			// Check response body if expected
+			if tc.expectedBody != "" {
+				body, err := ioutil.ReadAll(recorder.Body)
+				require.NoError(t, err)
+				require.Equal(t, tc.expectedBody, string(body))
+			}
+		})
+	}
+}
+
+
+
+
+
 func randomAccount() db.Account {
 	return db.Account{
 		ID:       util.RandomInt(1, 1000),
