@@ -17,7 +17,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestGetAccount(t *testing.T) {
+func TestGetAccountAPI(t *testing.T) {
 	account := randomAccount()
 
 	testCases := []struct {
@@ -96,7 +96,7 @@ func TestGetAccount(t *testing.T) {
 }
 
 
-func TestGetAccount(t *testing.T) {
+func TestCreateAccountAPI(t *testing.T) {
 	account := randomAccount()
 
 	testCases := []struct {
@@ -176,7 +176,7 @@ func TestGetAccount(t *testing.T) {
 	}
 }
 
-func TestListAccount(t *testing.T) {
+func TestListAccountAPI(t *testing.T) {
     accounts := []db.Account{
         {ID: 1, Name: "Alice", Balance: 100},
         {ID: 2, Name: "Bob", Balance: 200},
@@ -227,7 +227,7 @@ func TestListAccount(t *testing.T) {
 }
 
 
-func TestUpdateAccount(t *testing.T) {
+func TestUpdateAccountAPI(t *testing.T) {
     account := randomAccount()
     req := updateAccountRequest{
         ID:      account.ID,
@@ -279,7 +279,7 @@ func TestUpdateAccount(t *testing.T) {
     }
 }
 
-func TestDeleteAccount(t *testing.T) {
+func TestDeleteAccountAPI(t *testing.T) {
     account := randomAccount()
     req := deleteAccountRequest{
         ID: account.ID,
