@@ -1,3 +1,1 @@
-ALTER TABLE IF EXISTS "accounts" CONSTRAINT IF EXISTS "accounts_owner_fkey"
-
 DROP TABLE IF EXISTS users;
