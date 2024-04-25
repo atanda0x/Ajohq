@@ -1,7 +1,7 @@
 -- name: CreateUser :one
 INSERT INTO users (
   username, 
-  hash_password,
+  hashed_password,
   full_name, 
   email
 ) VALUES (
