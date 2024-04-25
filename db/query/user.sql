@@ -5,7 +5,7 @@ INSERT INTO users (
   full_name, 
   email
 ) VALUES (
-  $1, $2, $3, $3
+  $1, $2, $3, $4
 )
 RETURNING *;
 
