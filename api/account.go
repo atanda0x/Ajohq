@@ -3,10 +3,12 @@ package api
 import (
 	"database/sql"
 	"errors"
+	"log"
 	"net/http"
 
 	db "github.com/atanda0x/FintechConnect/db/sqlc"
 	"github.com/gin-gonic/gin"
+	"github.com/lib/pq"
 )
 
 type CreateAccountRequest struct {
@@ -47,6 +49,9 @@ func (s *Server) CreateAccount(ctx *gin.Context) {
 
 	account, err := s.store.CreateAccount(ctx, arg)
 	if err != nil {
+		if pqErr, ok := err.(*pq.Error); ok {
+			log.Println(pqErr.Code.Name())
+		}
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}

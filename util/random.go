@@ -6,20 +6,24 @@ import (
 	"time"
 )
 
+var (
+	random *rand.Rand
+)
+
 func init() {
-	rand.NewSource(time.Now().UnixNano())
+	random = rand.New(rand.NewSource(time.Now().UnixNano()))
 }
 
 // RandInt generate a random integer between min and max
 func RandomInt(min, max int64) int64 {
-	return min + rand.Int63n(max-min+1)
+	return min + random.Int63n(max-min+1)
 }
 
 // RandomOwner generate a random name
 func RandomOwner() string {
 	owners := []string{"atanda", "ismail", "sultan", "munirah", "omowunmi", "victor", "nasu", "mujeeb", "samod", "rasheed", "osho", "agenla", "adeleke"}
 	n := len(owners)
-	return owners[rand.Intn(n)]
+	return owners[random.Intn(n)]
 }
 
 // RandomMoney generate a random amount of money
@@ -28,5 +32,5 @@ func RandomMoney() int64 {
 }
 
 func RandomEmail() string {
-	return fmt.Sprintf("%s@gmail.com", RandomOwner())
+	return fmt.Sprintf("%s%d@gmail.com", RandomOwner(), random.Intn(1000))
 }
